@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assignment1/core/strings/strings.dart';
 import 'package:flutter_assignment1/core/widgets/app_button.dart';
 import 'package:flutter_assignment1/core/widgets/input_text_field.dart';
+import 'package:go_router/go_router.dart';
 
 class LastTripsLocations extends StatefulWidget {
   const LastTripsLocations({super.key});
@@ -12,7 +13,7 @@ class LastTripsLocations extends StatefulWidget {
 
 class _LastTripsLocationsState extends State<LastTripsLocations> {
   var locationController = TextEditingController();
-  var lastTripsLocation = [];
+  List<String> lastTripsLocation = [];
 
   @override
   void initState() {
@@ -28,35 +29,49 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         minimum: const EdgeInsets.only(top: 16),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              getTitle(),
-              getDescription(),
-              AppTextField(
-                controller: locationController,
-                hintText: Strings.locationText,
-                prefixIcon: const Icon(Icons.location_on_outlined),
-                onEditCompleted: () {
-                  setState(() {
-                    lastTripsLocation.add(locationController.text);
-                    locationController.clear();
-                  });
-                },
-              ),
-              getAddedLocations(),
-              const Spacer(),
-              AppButton(
-                buttonEnabled: lastTripsLocation.isNotEmpty,
-                color: Colors.lightBlue.withOpacity(0.3),
-                text: 'Continue',
-              ),
-              const Spacer()
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                getTitle(),
+                getDescription(),
+                AppTextField(
+                  controller: locationController,
+                  hintText: Strings.locationText,
+                  prefixIcon: const Icon(Icons.location_on_outlined),
+                  onEditCompleted: () {
+                    setState(() {
+                      lastTripsLocation.add(locationController.text);
+                      locationController.clear();
+                    });
+                  },
+                ),
+                getAddedLocations(),
+                getContinueButton(),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget getContinueButton() {
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1, bottom: 24),
+      child: AppButton(
+        buttonEnabled: lastTripsLocation.isNotEmpty,
+        color: Colors.lightBlue.withOpacity(0.3),
+        text: Strings.continueText,
+        onPressed: () {
+          context.go(
+            Strings.secondScreenPath,
+            extra: lastTripsLocation,
+          );
+        },
       ),
     );
   }
