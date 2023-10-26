@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment1/core/strings/strings.dart';
+import 'package:flutter_assignment1/core/widgets/app_button.dart';
 import 'package:flutter_assignment1/core/widgets/input_text_field.dart';
 
 class LastTripsLocations extends StatefulWidget {
@@ -45,7 +46,14 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
                   });
                 },
               ),
-              getAddedLocations()
+              getAddedLocations(),
+              const Spacer(),
+              AppButton(
+                buttonEnabled: lastTripsLocation.isNotEmpty,
+                color: Colors.lightBlue.withOpacity(0.3),
+                text: 'Continue',
+              ),
+              const Spacer()
             ],
           ),
         ),
