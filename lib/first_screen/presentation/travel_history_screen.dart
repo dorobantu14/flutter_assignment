@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment1/core/colors/app_colors.dart';
 import 'package:flutter_assignment1/core/strings/strings.dart';
+import 'package:flutter_assignment1/core/text_styles/text_styles.dart';
 import 'package:flutter_assignment1/core/widgets/app_button.dart';
 import 'package:flutter_assignment1/core/widgets/input_text_field.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LastTripsLocations extends StatefulWidget {
   const LastTripsLocations({super.key});
@@ -28,6 +31,12 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        elevation: 0,
+        actions: [getLogoutButton(context)],
+      ),
       body: SafeArea(
         bottom: false,
         minimum: const EdgeInsets.only(top: 16),
@@ -38,17 +47,7 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
               children: [
                 getTitle(),
                 getDescription(),
-                AppTextField(
-                  controller: locationController,
-                  hintText: Strings.locationText,
-                  prefixIcon: const Icon(Icons.location_on_outlined),
-                  onEditCompleted: () {
-                    setState(() {
-                      lastTripsLocation.add(locationController.text);
-                      locationController.clear();
-                    });
-                  },
-                ),
+                getLocationField(),
                 getAddedLocations(),
                 getContinueButton(),
               ],
@@ -59,12 +58,45 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
     );
   }
 
+  Widget getLogoutButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16),
+      child: GestureDetector(
+        child: const Icon(
+          Icons.logout,
+          color: AppColors.blue,
+          size: 32,
+        ),
+        onTap: () async {
+          await SharedPreferences.getInstance().then(
+            (value) => value.setBool('isLoggedIn', false),
+          );
+          context.go('/login');
+        },
+      ),
+    );
+  }
+
+  Widget getLocationField() {
+    return AppTextField(
+      controller: locationController,
+      hintText: Strings.locationText,
+      prefixIcon: const Icon(Icons.location_on_outlined),
+      onEditCompleted: () {
+        setState(() {
+          lastTripsLocation.add(locationController.text);
+          locationController.clear();
+        });
+      },
+    );
+  }
+
   Widget getContinueButton() {
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1, bottom: 24),
       child: AppButton(
         buttonEnabled: lastTripsLocation.isNotEmpty,
-        color: Colors.lightBlue.withOpacity(0.3),
+        color: AppColors.blue,
         text: Strings.continueText,
         onPressed: () {
           context.go(
@@ -95,10 +127,7 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
     return InputChip(
       label: Text(
         locationName,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyles.blackButtonTextStyle,
       ),
       avatar: const Icon(Icons.location_on_outlined),
       backgroundColor: Colors.white,
@@ -118,11 +147,7 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
       padding: EdgeInsets.symmetric(vertical: 24),
       child: Text(
         Strings.shareLocationsText,
-        style: TextStyle(
-          color: Colors.grey,
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-        ),
+        style: TextStyles.boldGreyTextStyle,
         textAlign: TextAlign.center,
       ),
     );
@@ -133,10 +158,7 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
       padding: EdgeInsets.only(top: 48),
       child: Text(
         Strings.travelHistoryText,
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyles.boldSubtitleTextStyle,
         textAlign: TextAlign.center,
       ),
     );

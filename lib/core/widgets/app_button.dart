@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment1/core/colors/app_colors.dart';
 
 class AppButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -20,9 +21,8 @@ class AppButton extends StatelessWidget {
       onPressed: buttonEnabled ?? true ? onPressed : () {},
       style: ButtonStyle(
         backgroundColor: MaterialStatePropertyAll(
-          buttonEnabled ?? true ? color : Colors.grey,
+          buttonEnabled ?? true ? color : AppColors.lightGrey,
         ),
-        elevation: const MaterialStatePropertyAll(2.0),
         fixedSize: MaterialStatePropertyAll(
           Size(MediaQuery.of(context).size.width, 48),
         ),
@@ -30,7 +30,7 @@ class AppButton extends StatelessWidget {
       child: Text(
         text,
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColors.white,
         ),
       ),
     );
