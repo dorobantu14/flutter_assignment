@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment1/core/colors/app_colors.dart';
 import 'package:flutter_assignment1/core/strings/strings.dart';
+import 'package:flutter_assignment1/core/text_styles/text_styles.dart';
+import 'package:flutter_assignment1/core/widgets/back_button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DisplayLocationsScreen extends StatelessWidget {
   final List<String> locations;
@@ -13,20 +17,44 @@ class DisplayLocationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: getBackButton(context),
+        backgroundColor: AppColors.white,
+        elevation: 0,
+        actions: [getLogoutButton(context)],
+      ),
       body: SafeArea(
         minimum: const EdgeInsets.only(top: 16),
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Column(
               children: [
-                getBackButton(context),
-                Expanded(child: getTitle()),
+                getTitle(),
+                getAddedLocations(context),
               ],
             ),
-            getAddedLocations(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget getLogoutButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16),
+      child: GestureDetector(
+        child: const Icon(
+          Icons.logout,
+          color: AppColors.blue,
+          size: 32,
+        ),
+        onTap: () async {
+          await SharedPreferences.getInstance().then(
+            (value) => value.setBool('isLoggedIn', false),
+          );
+          context.go('/login');
+        },
       ),
     );
   }
@@ -34,11 +62,7 @@ class DisplayLocationsScreen extends StatelessWidget {
   Widget getBackButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
-      child: GestureDetector(
-        child: const Icon(
-          Icons.arrow_back_outlined,
-          size: 32,
-        ),
+      child: AppBackButton(
         onTap: () {
           context.pop();
         },
@@ -65,10 +89,7 @@ class DisplayLocationsScreen extends StatelessWidget {
     return InputChip(
       label: Text(
         locationName,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyles.blackButtonTextStyle,
       ),
       avatar: const Icon(Icons.location_on_outlined),
       backgroundColor: Colors.white,
@@ -82,10 +103,7 @@ class DisplayLocationsScreen extends StatelessWidget {
   Widget getTitle() {
     return const Text(
       Strings.lastTripsText,
-      style: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.w600,
-      ),
+      style: TextStyles.boldSubtitleTextStyle,
       textAlign: TextAlign.center,
     );
   }
