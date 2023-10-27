@@ -4,17 +4,23 @@ import 'package:flutter_assignment1/core/strings/strings.dart';
 import 'package:flutter_assignment1/core/text_styles/text_styles.dart';
 import 'package:flutter_assignment1/core/widgets/app_button.dart';
 import 'package:flutter_assignment1/core/widgets/input_text_field.dart';
+import 'package:flutter_assignment1/main_screen/domain/bloc/persons_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class LastTripsLocations extends StatefulWidget {
-  const LastTripsLocations({super.key});
+class InputScreen extends StatefulWidget {
+  final String personName;
+
+  const InputScreen({
+    super.key,
+    required this.personName,
+  });
 
   @override
-  State<LastTripsLocations> createState() => _LastTripsLocationsState();
+  State<InputScreen> createState() => _InputScreenState();
 }
 
-class _LastTripsLocationsState extends State<LastTripsLocations> {
+class _InputScreenState extends State<InputScreen> {
   var locationController = TextEditingController();
   List<String> lastTripsLocation = [];
 
@@ -22,6 +28,13 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
   void initState() {
     super.initState();
     locationController.addListener(refreshCallback);
+    final state = context.read<PersonsBloc>().state;
+    final personIndex = state.persons.indexWhere(
+      (person) => person.name == widget.personName,
+    );
+    if (state.persons[personIndex].lastTripsLocations != null) {
+      lastTripsLocation = state.persons[personIndex].lastTripsLocations!;
+    }
   }
 
   void refreshCallback() {
@@ -30,49 +43,31 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
-        actions: [getLogoutButton(context)],
-      ),
-      body: SafeArea(
-        bottom: false,
-        minimum: const EdgeInsets.only(top: 16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                getTitle(),
-                getDescription(),
-                getLocationField(),
-                getAddedLocations(),
-                getContinueButton(),
-              ],
-            ),
+    return BlocListener<PersonsBloc, PersonsState>(
+      listener: (context, state) {
+        final personIndex = state.persons.indexWhere(
+          (person) => person.name == widget.personName,
+        );
+        if (state.status == PersonsStatus.success) {
+          context.go(
+            Strings.secondScreenPath,
+            extra: state.persons[personIndex].lastTripsLocations,
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              getTitle(),
+              getDescription(),
+              getLocationField(),
+              getAddedLocations(),
+              getContinueButton(),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget getLogoutButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: GestureDetector(
-        child: const Icon(
-          Icons.logout,
-          color: AppColors.blue,
-          size: 32,
-        ),
-        onTap: () async {
-          await SharedPreferences.getInstance().then(
-            (value) => value.setBool('isLoggedIn', false),
-          );
-          context.go('/login');
-        },
       ),
     );
   }
@@ -99,10 +94,12 @@ class _LastTripsLocationsState extends State<LastTripsLocations> {
         color: AppColors.blue,
         text: Strings.continueText,
         onPressed: () {
-          context.go(
-            Strings.secondScreenPath,
-            extra: lastTripsLocation,
-          );
+          context.read<PersonsBloc>().add(
+                PersonsEvent.addPersonInput(
+                  personName: widget.personName,
+                  input: lastTripsLocation,
+                ),
+              );
         },
       ),
     );
