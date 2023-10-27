@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment1/app/app_router.dart';
 import 'package:flutter_assignment1/core/colors/app_colors.dart';
+import 'package:flutter_assignment1/core/strings/strings.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,7 +17,7 @@ void main() async {
 
 Future<bool> getLoginState() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('isLoggedIn') ?? false;
+  return prefs.getBool(Strings.isLoggedInText) ?? false;
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(colorSchemeSeed: AppColors.lightBlue),
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouter(
-        initialLocation: _isUserLoggedIn ? '/main_screen' : '/login',
+        initialLocation: _isUserLoggedIn ? Strings.mainScreenPath : Strings.loginPath,
         routes: AppRouter.routes,
       ),
     );
