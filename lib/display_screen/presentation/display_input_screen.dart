@@ -6,10 +6,10 @@ import 'package:flutter_assignment1/core/widgets/back_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DisplayLocationsScreen extends StatelessWidget {
+class DisplayInputScreen extends StatelessWidget {
   final List<String> locations;
 
-  const DisplayLocationsScreen({
+  const DisplayInputScreen({
     super.key,
     required this.locations,
   });
@@ -51,9 +51,11 @@ class DisplayLocationsScreen extends StatelessWidget {
         ),
         onTap: () async {
           await SharedPreferences.getInstance().then(
-            (value) => value.setBool('isLoggedIn', false),
+                (value) {
+              value.setBool(Strings.isLoggedInText, false);
+              context.go(Strings.loginPath);
+            },
           );
-          context.go('/login');
         },
       ),
     );

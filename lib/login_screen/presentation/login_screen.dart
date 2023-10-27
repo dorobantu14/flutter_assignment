@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (hasLength && hasUppercase && hasLowercase && hasDigit && hasSpecialChar) {
       return null;
     }
-    return 'Password not strong enough';
+    return Strings.passwordNotStrongText;
   }
 
   Widget getPasswordField() {
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: _passwordKey,
         child: AppTextField(
-          hintText: 'Password',
+          hintText: Strings.passwordText,
           obscureText: !isPasswordVisible,
           suffixIcon: getVisibilityIcon(),
           controller: passwordController,
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Padding(
           padding: const EdgeInsets.only(top: 24),
           child: AppTextField(
-            hintText: 'Email',
+            hintText: Strings.emailText,
             controller: emailController,
             validator: isEmailValid,
           ),
@@ -142,14 +142,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String? isEmailValid(String? email) {
     final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     if (!emailRegex.hasMatch(email ?? '')) {
-      return 'Email should look like: user@xxx.com';
+      return Strings.emailShouldLookText;
     }
     return null;
   }
 
   Future<void> setLoginState(bool isLoggedIn) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', isLoggedIn);
+    await prefs.setBool(Strings.isLoggedInText, isLoggedIn);
   }
 
   Widget getLoginButton() {
@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
           final bool validPassword = _passwordKey.currentState!.validate();
           if (validEmail && validPassword) {
             await setLoginState(true).then(
-              (value) => context.go('/main_screen'),
+              (value) => context.go(Strings.mainScreenPath),
             );
           }
         },

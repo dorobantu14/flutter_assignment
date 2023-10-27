@@ -2,6 +2,8 @@ abstract class Strings {
   //paths
   static const secondScreenPath = '/main_screen/display_screen';
   static const loginIconPath = 'assets/icons/login_icon.svg';
+  static const loginPath = '/login';
+  static const mainScreenPath = '/main_screen';
 
   //texts
   static const locationText = 'Location';
@@ -25,4 +27,11 @@ abstract class Strings {
   static const tryAgainText = 'Try again';
   static const pleaseSignInText = 'Please sign in to continue';
   static const noAccountText = 'Don\'t have an account?';
+  static const personsText = 'Persons';
+  static const inputText = 'Input';
+  static const isLoggedInText = 'isLoggedIn';
+  static const passwordNotStrongText = 'Password not strong enough';
+  static const emailShouldLookText = 'Email should look like: user@xxx.com';
+  static const availablePersonsText = 'Available Persons';
+  static const pleaseTapPersonText = 'Please tap on one person to fill in last trips location';
 }

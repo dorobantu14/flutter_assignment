@@ -1,6 +1,6 @@
-import 'package:flutter_assignment1/first_screen/presentation/travel_history_screen.dart';
+import 'package:flutter_assignment1/display_screen/presentation/display_input_screen.dart';
 import 'package:flutter_assignment1/login_screen/presentation/login_screen.dart';
-import 'package:flutter_assignment1/second_screen/presentation/display_locations_screen.dart';
+import 'package:flutter_assignment1/main_screen/presentation/main_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
@@ -13,13 +13,13 @@ class AppRouter {
         ),
         GoRoute(
           path: '/main_screen',
-          builder: (context, state) => const LastTripsLocations(),
+          builder: (context, state) => const MainScreen(),
           routes: [
             GoRoute(
               path: 'display_screen',
               builder: (context, state) {
                 final locations = state.extra as List<String>;
-                return DisplayLocationsScreen(locations: locations);
+                return DisplayInputScreen(locations: locations);
               },
             ),
           ],
