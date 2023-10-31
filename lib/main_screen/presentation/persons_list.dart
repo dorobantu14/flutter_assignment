@@ -57,6 +57,8 @@ class _PersonsListState extends State<PersonsList> {
 
   Widget buildPersonItem(int index, PersonsState state) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      key: Key(index.toString()),
       onTap: () {
         widget.onTap(index);
       },

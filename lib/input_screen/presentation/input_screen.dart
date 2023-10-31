@@ -32,7 +32,8 @@ class _InputScreenState extends State<InputScreen> {
     final personIndex = state.persons.indexWhere(
       (person) => person.name == widget.personName,
     );
-    if (state.persons[personIndex].lastTripsLocations != null) {
+    if (state.persons[personIndex].lastTripsLocations != null &&
+        state.persons[personIndex].lastTripsLocations!.isNotEmpty) {
       lastTripsLocation = state.persons[personIndex].lastTripsLocations!;
     }
   }

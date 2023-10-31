@@ -95,12 +95,10 @@ class _MainScreenState extends State<MainScreen> {
           size: 32,
         ),
         onTap: () async {
-          await SharedPreferences.getInstance().then(
-            (value) {
-              value.setBool(Strings.isLoggedInText, false);
-              context.go(Strings.loginPath);
-            },
-          );
+          await SharedPreferences.getInstance().then((value) {
+            value.setBool(Strings.isLoggedInText, false);
+            context.go(Strings.loginPath);
+          });
         },
       ),
     );
