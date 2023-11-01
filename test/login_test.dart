@@ -81,8 +81,8 @@ void main() {
   testWidgets('Login valid email and invalid password', (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home:LoginScreen(),
-        ),
+        home: LoginScreen(),
+      ),
     );
 
     // Find the email and password input fields
